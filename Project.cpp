@@ -16,7 +16,7 @@ class Account
 class Article 
 {
 	string Name , ID , Ref_ID , Date ;
-	Account accounts[10][2];
+	Account accounts[10];
 	char *txt ;
 	
 	public :
@@ -25,6 +25,11 @@ class Article
 			Name = name ; ID = id ; Ref_ID = ref_id ; Date = date ;
 			txt = &text[0];
 		}
+
+    void add_account(Account account,int n){
+        
+        
+    }    
 
 
 };
@@ -68,7 +73,29 @@ int main()
        
        
        break; }
-       case 2:break;
+       case 2:{
+           int n;
+           cout<<"Enter participating people count: "<<endl;
+           cin>>n;
+           while(n>10 || n<=0){
+               cout<<"Error: Enter a number between 1 and 10"<<endl;
+               cin>>n;
+           }
+           for(int i=0; i<n ;i++){
+               string username,password;
+               cout<<"Enter Person Number "<<(i+1)<<"'s Username: "<<endl;
+               cin>>username;
+               cout<<"Enter Person Number "<<(i+1)<<"'s Password: "<<endl;
+               cin>>password;
+               Account a(username,password);
+
+           }
+
+
+           break;
+       }
+
+       
        case 3:break;
        case 4:break;
        case 5:break;
