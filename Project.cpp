@@ -9,11 +9,20 @@ class Account
 	public :
 		Account(string user ,string pass) : Username(user) , Password(pass) {}
 		Account(){}
-		
+		void p()//temporary method to show values of calsses , dude !!
+		{
+			cout<<Username<<endl;
+			cout<<Password<<endl;
+		}
+		int check(string user , string pass)
+		{
+			if(Username == user && Password == pass) return 1;
+			return 0;
+		}
 	
 };
 
-class Article 
+class Article : public Validate
 {
     protected:
     int people_count;
@@ -28,6 +37,11 @@ class Article
             people_count=people;
 			txt = text ;
 		}
+		Article(){}
+		void p() //temporary method to show values of calsses , dude !!
+		{
+			cout<<txt<<endl;
+		}
 
     void add_account(Account account,int index){
         accounts[index] = account;
@@ -36,16 +50,21 @@ class Article
 
 };
 
-class Validate : public Article{
+class Validate {
+	
+	friend void split(Validate & );
+
+	protected :
+		string Article_words[5001] , Article_Name_words[13] , Situation ;
+		int num_name , num_text ;
+	
     public:
-       //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //!!!!!!Functiona ro inja benevis!!!!!!!
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    	void split_Article()
+    	void split_Article_Name()
 
+        
 
-}
+};
 
 
 int main()
@@ -63,13 +82,13 @@ int main()
     
        switch (order){
 
-       case -1: exit(0); break; //khorooj
+       case -1: exit(0); break; // EXIT 
 		case  0 : // hint
 			{
 				cout<<"\n"<<"-1 : exit";
-				cout<<"\n"<<"0 : hint";
-				cout<<"\n"<<"1 : create account";
-				cout<<"\n"<<"2 : create article";
+				cout<<"\n"<<" 0 : hint";
+				cout<<"\n"<<" 1 : create account";
+				cout<<"\n"<<" 2 : create article";
 				cout<<"\n";
 
 				break;
@@ -91,11 +110,12 @@ int main()
        break; }
        case 2:{
             //create article
-           int n;
-           string name,id,ref_id,date;
+           
+           int n = 2 ;
+           string name,id,ref_id,date , spoil;
            char text[40000];
            cout<<"Enter Article's name: "<<endl;
-           getline(cin,name);
+           cin>>name;
            cout<<"Enter Article's ID: "<<endl;
            cin>>id;
            cout<<"Enter Article's reference ID: "<<endl;
@@ -103,7 +123,7 @@ int main()
            cout<<"Enter Article's Date: "<<endl;
            cin>>date;
            cout<<"Enter Article's Text and add a '$' char in the end: "<<endl;
-           cin.get(text,sizeof(text),'$')
+           cin.get(text,sizeof(text),'$');cin>>spoil;
            cout<<"Enter participating people count: "<<endl;
            cin>>n;
            Article article(name,id,ref_id,date,text,n);
@@ -112,24 +132,51 @@ int main()
                cin>>n;
            }
            for(int i=0; i<n ;i++){
+           	   int flag =-1;
                string username,password;
                cout<<"Enter Person Number "<<(i+1)<<"'s Username: "<<endl;
                cin>>username;
                cout<<"Enter Person Number "<<(i+1)<<"'s Password: "<<endl;
                cin>>password;
-               Account a(username,password);
+               for(int j=0 ; j<num_accounts ; j++)
+               {
+               	    if(total_accounts[j].check(username , password))
+               	    {
+               	    	flag = j ; break ;
+					   }
+			   }
+			   if(flag!=-1){
+			   	article.add_account(total_accounts[flag] , i) ;
+			   	cout<<"Account exists !!! "<<endl<<endl;
+			   }
+			   else{
+			   	Account a(username,password);
                article.add_account(a,i);
+               total_accounts[num_accounts++];
+               cout<<"Account was added successfully !!! "<<endl<<endl;
+			   }
+
 
            }
 
-           total_articles[num_articles++];
+           total_articles[num_articles++] = article;
 
            break;
        }
 
        
-       case 3:break;
-       case 4:break;
+       case 3:
+       	{
+       		for(int i=0 ; i<num_accounts ; i++) total_accounts[i].p();
+       		break;
+		}
+       case 4:
+       	{
+       		cout<<num_articles ; 
+       		for (int i=0 ; i<num_articles ; i++)
+            total_articles[i].p();  
+			break;     
+	    }
        case 5:break;
        case 6:break;
        case 7:break;
@@ -138,7 +185,23 @@ int main()
            break;
        }
    }
-        
+
+    
+    for(int i=0 ; i<num_accounts ; i++) total_accounts[i].p();
     
 	return 0;
+}
+void split_name(Article &ob)
+{
+	char *p ;
+	p = strtok(ob.Name , " ") ;
+	int ob.num_name = 0;
+	do{
+		
+		ob.
+	}
+}
+void split_name(Article &ob)
+{
+
 }
