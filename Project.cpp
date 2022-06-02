@@ -1,8 +1,10 @@
 #include<bits/stdc++.h>
 using namespace std ;
 
+
 class Account 
 {
+	 
 	private :
 	 string Username , Password ;
 	  
@@ -19,19 +21,96 @@ class Account
 			if(Username == user && Password == pass) return 1;
 			return 0;
 		}
+		int RatePassword()
+		{
+			int len , upper=0 ,lower=0 , sign=0 ; 
+			len = Password.length();
+			for(int i = 0 ; i<len ; i++)
+			{
+				if(Password[i]>=65 && Password[i]<=90) upper ++;
+				else if(Password[i]>=97 && Password[i]<=122)lower ++;
+				else sign ++ ;
+			}
+			// security 
+			if(len<=10)
+			{
+				if((upper==0 && lower==0) ||(upper==0 && sign==0) || (sign==0 && lower==0)) return 0 ;
+				if(upper==0 || lower==0 ||sign==0) return 1 ;
+				if(upper>=3 && lower>=3 &&sign>=3) return 5 ;
+				if(upper>=2 && lower>=2 &&sign>=2) return 4 ;
+				return 3 ;
+				
+			}
+			else if(len<=20)
+			{
+				if((upper==0 && lower==0) ||(upper==0 && sign==0) || (sign==0 && lower==0)) return 2 ;
+				if(upper==0 || lower==0 ||sign==0) return 3 ;
+				if(upper>=6 && lower>=6 &&sign>=6) return 7 ;
+				if(upper>=4 && lower>=4 &&sign>=4) return 6 ;
+				if(upper>=2 && lower>=2 &&sign>=2) return 5 ;
+				return 4 ;
+			}
+			else 
+			{
+				if((upper==0 && lower==0) ||(upper==0 && sign==0) || (sign==0 && lower==0)) return 3 ;
+				if(upper==0 || lower==0 ||sign==0) return 5 ;
+				if(upper>=12 && lower>=12 &&sign>=12) return 10 ;
+				if(upper>=10 && lower>=10 &&sign>=10) return 9 ;
+				if(upper>=6 && lower>=6 &&sign>=6) return 8 ;
+				if(upper>=4 && lower>=4 &&sign>=4) return 7 ;
+				if(upper>=2 && lower>=2 &&sign>=2) return 6 ;
+				return 5 ;
+			}
+		}
+	    void suggested_password()
+	    {
+			srand(time(0));
+			string str = "0987654321!@#$%^&*<>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
+			int x = rand()%31+ 15;
+			string strong_pass ="";
+			for(int i= 0 ; i<= x ; i++)
+			{
+				int j = rand()%72 ;
+				strong_pass +=  str[j];
+			}
+			Password = strong_pass;
+			cout<<"your new password is : "<<endl;
+			cout<<Password<<endl;	
+	    }
+		
 	
+};
+class Validate {
+	
+
+	protected :
+		//string Article_words[5001] ,
+		 string Article_Name_words[13] , Situation ;
+		int num_name , num_text ;
+	public :
+		void pp()
+		{
+			cout<<num_name<<endl;
+			for(int i=0; i<num_name ; i++) cout<<Article_Name_words[i]<<endl;
+		}
+
+
+        
+
 };
 
 class Article : public Validate
 {
+	friend void split_name(Article &);
+	
     protected:
     int people_count;
-	string Name , ID , Ref_ID , Date ;
+	string  ID , Ref_ID , Date ;
 	Account accounts[10];
-	char *txt ;
+	char *txt , *Name;
 	
 	public :
-		Article(string name ,string id , string ref_id , string date ,char *text,int people)
+		Article(char *name ,string id , string ref_id , string date ,char *text,int people)
 		{
 			Name = name ; ID = id ; Ref_ID = ref_id ; Date = date ;
             people_count=people;
@@ -50,23 +129,9 @@ class Article : public Validate
 
 };
 
-class Validate {
-	
-	friend void split(Validate & );
-
-	protected :
-		string Article_words[5001] , Article_Name_words[13] , Situation ;
-		int num_name , num_text ;
-	
-    public:
-    	void split_Article()
-    	void split_Article_Name()
-
-        
-
-};
 
 
+void split_name(Article &);
 int main()
 {
 	Account total_accounts[100];
@@ -97,13 +162,24 @@ int main()
        case 1: 
 	   {   
 	        //create account
+	        string ans ;
        		cout<<"Enter your Username: "<<endl;
        		string user,pass;
        		cin>>user;
        		cout<<"Enter your Password: "<<endl;
        		cin>>pass;
-       		cout<<endl;
        		Account acc(user , pass);
+       		cout<<"your password security is (1-10) :  "<<acc.RatePassword()<<endl;
+       		if(acc.RatePassword()<=7)
+			   {
+			   	
+       			cout<<endl<<"do you want a strong pass ? (y/n) : ";
+       			cin>>ans;
+       			if(ans=="y")
+       			{
+       				acc.suggested_password();
+				}
+			   }
        		total_accounts[num_accounts ++] = acc ; 
        
        
@@ -112,10 +188,10 @@ int main()
             //create article
            
            int n = 2 ;
-           string name,id,ref_id,date , spoil;
-           char text[40000];
+           string id,ref_id,date , spoil;
+           char text[40000] , name[200];
            cout<<"Enter Article's name: "<<endl;
-           cin>>name;
+           cin.get(name,sizeof(name),'$');cin>>spoil;
            cout<<"Enter Article's ID: "<<endl;
            cin>>id;
            cout<<"Enter Article's reference ID: "<<endl;
@@ -133,7 +209,7 @@ int main()
            }
            for(int i=0; i<n ;i++){
            	   int flag =-1;
-               string username,password;
+               string username,password , ans;
                cout<<"Enter Person Number "<<(i+1)<<"'s Username: "<<endl;
                cin>>username;
                cout<<"Enter Person Number "<<(i+1)<<"'s Password: "<<endl;
@@ -150,9 +226,20 @@ int main()
 			   	cout<<"Account exists !!! "<<endl<<endl;
 			   }
 			   else{
-			   	Account a(username,password);
+			   Account a(username,password);
+			   cout<<"your password security is (1-10) :  "<<a.RatePassword()<<endl;
+       		   if(a.RatePassword()<=7)
+			   {
+			   	
+       			cout<<endl<<"do you want a strong pass ? (y/n) : ";
+       			cin>>ans;
+       			if(ans=="y")
+       			{
+       				a.suggested_password();
+				}
+			   }
                article.add_account(a,i);
-               total_accounts[num_accounts++];
+               total_accounts[num_accounts++] = a;
                cout<<"Account was added successfully !!! "<<endl<<endl;
 			   }
 
@@ -177,7 +264,12 @@ int main()
             total_articles[i].p();  
 			break;     
 	    }
-       case 5:break;
+       case 5:
+       	{
+       	    split_name(total_articles[0]);
+       		total_articles[0].pp();
+       		break; 
+		   }
        case 6:break;
        case 7:break;
        
@@ -195,13 +287,10 @@ void split_name(Article &ob)
 {
 	char *p ;
 	p = strtok(ob.Name , " ") ;
-	int ob.num_name = 0;
+	 ob.num_name = 0;
 	do{
 		
-		ob.
-	}
-}
-void split_name(Article &ob)
-{
-
+		ob.Article_Name_words[ob.num_name++] = p;
+		p = strtok(NULL , " ");
+	}while(p!=NULL);
 }
